@@ -1,14 +1,23 @@
+using Spectre.Console;
 using Spectre.Console.Cli;
 using faketasks.Cli.Commands;
+using faketasks.Cli.Infrastructure;
+
+// Preprocess arguments to handle module flags and combined flags
+var (transformedArgs, detectedModule) = ArgumentPreprocessor.Preprocess( args );
+
+// Special case: if no args provided, show help
+if (args.Length == 0) {
+    transformedArgs = new[] { "--help" };
+}
 
 var app = new CommandApp();
 
 app.Configure( config => {
     config.SetApplicationName( "faketasks" );
 
-    config.AddExample( new[] { "bootlog", "--test" } );
-    config.AddExample( new[] { "bootlog", "--speed", "2.0" } );
-    config.AddExample( new[] { "list-modules" } );
+    // Custom help text
+    config.SetApplicationVersion( "1.0.0" );
 
     // Module commands
     config.AddCommand<BootlogCommand>( "bootlog" )
@@ -16,8 +25,9 @@ app.Configure( config => {
         .WithDescription( "Simulate Linux kernel boot messages" )
         .WithExample( new[] { "bootlog" } )
         .WithExample( new[] { "bootlog", "-t" } )
-        .WithExample( new[] { "bootlog", "--speed", "0.5" } )
-        .WithExample( new[] { "bootlog", "--count", "5" } );
+        .WithExample( new[] { "-b" } )
+        .WithExample( new[] { "-bt" } )
+        .WithExample( new[] { "--bootlog", "--speed", "2.0" } );
 
     // Utility commands
     config.AddCommand<ListModulesCommand>( "list-modules" )
@@ -30,4 +40,10 @@ app.Configure( config => {
         .WithDescription( "Display version information" );
 } );
 
-return await app.RunAsync( args );
+// If a module was detected via flag, show a hint in debug mode
+if (detectedModule != null && Environment.GetEnvironmentVariable( "FAKETASKS_DEBUG" ) == "1") {
+    AnsiConsole.MarkupLine( $"[dim]Detected module via flag: {detectedModule}[/]" );
+    AnsiConsole.MarkupLine( $"[dim]Transformed args: {string.Join( " ", transformedArgs )}[/]" );
+}
+
+return await app.RunAsync( transformedArgs );
