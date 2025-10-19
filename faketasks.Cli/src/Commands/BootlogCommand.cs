@@ -23,7 +23,7 @@ public sealed class BootlogCommand : AsyncCommand<BootlogSettings> {
 
         // Initialize module and scheduler
         var dataProvider = new EmbeddedDataProvider();
-        List<IFakeModule> modules = new() { new BootlogModule( dataProvider ) };
+        List<IFakeModule> modules = ModuleRegistry.GetAllModules( dataProvider );
         var outputWriter = new ConsoleOutputWriter();
         var scheduler = new ModuleScheduler( modules, config, outputWriter );
 

@@ -7,7 +7,7 @@ namespace faketasks.Core.Data;
 ///     Data provider that loads JSON resources embedded in the assembly.
 ///     Supports caching and provides strongly-typed access to data models.
 /// </summary>
-public sealed class EmbeddedDataProvider : IDataProvider {
+public sealed class EmbeddedDataProvider : ITypedDataProvider {
     readonly Assembly _assembly;
     readonly Dictionary<string, object> _cache;
     readonly JsonSerializerOptions _jsonOptions;

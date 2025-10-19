@@ -7,11 +7,11 @@ namespace faketasks.Core.Modules;
 ///     Simulates Linux kernel boot messages with realistic timestamps and hardware detection.
 /// </summary>
 public sealed class BootlogModule : IFakeModule {
-    readonly EmbeddedDataProvider _dataProvider;
+    readonly ITypedDataProvider _dataProvider;
     LinuxData? _linuxData;
     WordsData? _wordsData;
 
-    public BootlogModule(EmbeddedDataProvider dataProvider) {
+    public BootlogModule(ITypedDataProvider dataProvider) {
         _dataProvider = dataProvider ?? throw new ArgumentNullException( nameof(dataProvider) );
     }
 
