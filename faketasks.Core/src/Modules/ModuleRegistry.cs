@@ -33,9 +33,9 @@ public static class ModuleRegistry {
         ArgumentNullException.ThrowIfNull( name );
         ArgumentNullException.ThrowIfNull( dataProvider );
 
-        var allModules = GetAllModules( dataProvider );
+        List<IFakeModule> allModules = GetAllModules( dataProvider );
         return allModules.FirstOrDefault( m =>
-            string.Equals( m.Name, name, StringComparison.OrdinalIgnoreCase )
+                                              string.Equals( m.Name, name, StringComparison.OrdinalIgnoreCase )
         );
     }
 
@@ -47,7 +47,7 @@ public static class ModuleRegistry {
         // Create a temporary data provider just to enumerate module names
         // This is cheap because we're not actually loading any data
         var tempProvider = new EmbeddedDataProvider();
-        var modules = GetAllModules( tempProvider );
+        List<IFakeModule> modules = GetAllModules( tempProvider );
         return modules.Select( m => m.Name ).ToList().AsReadOnly();
     }
 }
