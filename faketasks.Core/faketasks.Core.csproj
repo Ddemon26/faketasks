@@ -1,13 +1,20 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
+        <OutputType>Library</OutputType>
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>
-        <EmbeddedResource Include="src\Data\Resources\*.json"/>
+        <EmbeddedResource Include="src/Data/Resources/*.json">
+            <LogicalName>faketasks.Core.Data.Resources.%(FileName)%(Extension)</LogicalName>
+        </EmbeddedResource>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="src\" />
+    </ItemGroup>
+    
 </Project>
