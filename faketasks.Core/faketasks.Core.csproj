@@ -8,6 +8,14 @@
 
     <ItemGroup>
         <EmbeddedResource Include="Data\Resources\*.json" />
+        <EmbeddedResource Include="src\Data\Resources\infrastructure.json" />
+        <EmbeddedResource Include="src\Data\Resources\linux.json" />
+        <EmbeddedResource Include="src\Data\Resources\packages.json" />
+        <EmbeddedResource Include="src\Data\Resources\words.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="src\" />
     </ItemGroup>
 
 </Project>
