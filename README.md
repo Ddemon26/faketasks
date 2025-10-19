@@ -1,6 +1,6 @@
 # faketasks
 
-Terminal-friendly fake task generator for demos, live streams, and screenshots. `faketasks` is inspired by the legendary [genact](https://github.com/svenstaro/genact) and recreates the feel of busy consoles using .NET 8 and [Spectre.Console](https://spectreconsole.net/cli).
+Terminal-friendly fake task generator for demos, live streams, and screenshots. `faketasks` is inspired by the legendary [genact](https://github.com/svenstaro/genact) and recreates the feel of busy consoles using .NET 8 and [Spectre.Console](https://spectreconsole.net/cli).
 
 ## Table of Contents
 - [Features](#features)
@@ -23,12 +23,12 @@ Terminal-friendly fake task generator for demos, live streams, and screenshots. 
 - Embedded JSON datasets so the app runs offline without additional assets
 
 ## Requirements
-- .NET SDK 8.0 or newer
+- .NET SDK 8.0 or newer
 - Windows, macOS, or Linux terminal with ANSI color support
 
 ## Quick Start
 ```bash
-git clone https://github.com/<your-account>/faketasks.git
+git clone https://github.com/Ddemon26/faketasks.git
 cd faketasks
 dotnet build
 dotnet run --project faketasks.Cli -- list-modules
