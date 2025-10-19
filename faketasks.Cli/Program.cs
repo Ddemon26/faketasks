@@ -19,21 +19,25 @@ Console.CancelKeyPress += (sender, e) => {
 try {
     // Create configuration
     var config = new GeneratorConfig {
-        SpeedFactor = 1.5, // Faster for demo
+        SpeedFactor = 1.0, // Normal speed
         InstantPrintLines = 0,
-        ExitAfterModules = 2, // Run two module iterations
+        ExitAfterModules = 3, // Run three module iterations
     };
 
     // Initialize data provider
     var dataProvider = new EmbeddedDataProvider();
 
     // Set up modules and scheduler
-    List<IFakeModule> modules = new() { new EnhancedDemoModule( dataProvider ) };
+    List<IFakeModule> modules = new() {
+        new BootlogModule( dataProvider )
+        // Comment out demo for now to test bootlog
+        // new EnhancedDemoModule( dataProvider )
+    };
     var outputWriter = new ConsoleOutputWriter();
     var scheduler = new ModuleScheduler( modules, config, outputWriter );
 
-    Console.WriteLine( "faketasks - Helper Utilities Showcase" );
-    Console.WriteLine( "======================================\n" );
+    Console.WriteLine( "faketasks - Bootlog Module Test" );
+    Console.WriteLine( "================================\n" );
 
     // Run the scheduler
     await scheduler.RunAsync( cts.Token );
