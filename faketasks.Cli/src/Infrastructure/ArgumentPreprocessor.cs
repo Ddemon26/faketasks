@@ -14,9 +14,10 @@ public static class ArgumentPreprocessor {
         { "-b", "bootlog" },
         { "--bootlog", "bootlog" },
         { "--boot", "bootlog" },
+        { "-c", "cargo" },
+        { "--cargo", "cargo" },
+        { "--build", "cargo" },
         // Future modules:
-        // { "-c", "cargo" },
-        // { "--cargo", "cargo" },
         // { "-d", "docker" },
         // { "--docker", "docker" },
         // { "-tf", "terraform" },

@@ -4,7 +4,7 @@ namespace faketasks.Core.Helpers;
 ///     Utilities for rendering progress indicators, percentages, and data sizes.
 /// </summary>
 public static class ProgressHelper {
-    static readonly string[] SpinnerFrames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" };
+    public static readonly string[] SpinnerFrames = { "⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏" };
     static readonly string[] BarSpinnerFrames = { "▱▱▱", "▰▱▱", "▰▰▱", "▰▰▰", "▰▰▱", "▰▱▱" };
 
     /// <summary>

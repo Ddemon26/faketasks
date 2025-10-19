@@ -16,8 +16,8 @@ public static class ModuleRegistry {
 
         return new List<IFakeModule> {
             new BootlogModule( dataProvider ),
+            new CargoModule( dataProvider ),
             // Future modules will be added here:
-            // new CargoModule( dataProvider ),
             // new DockerModule( dataProvider ),
             // new TerraformModule( dataProvider ),
         };

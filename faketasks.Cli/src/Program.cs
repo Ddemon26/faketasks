@@ -31,6 +31,15 @@ app.Configure( config => {
             .WithExample( "run", "-t" );
 
         // Specific module commands
+        config.AddCommand<CargoCommand>( "cargo" )
+            .WithAlias( "build" )
+            .WithDescription( "Simulate Rust cargo build operations" )
+            .WithExample( "cargo" )
+            .WithExample( "cargo", "-t" )
+            .WithExample( "-c" )
+            .WithExample( "-ct" )
+            .WithExample( "--cargo", "--speed", "2.0" );
+
         config.AddCommand<BootlogCommand>( "bootlog" )
             .WithAlias( "boot" )
             .WithDescription( "Simulate Linux kernel boot messages" )

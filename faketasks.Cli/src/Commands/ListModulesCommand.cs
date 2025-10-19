@@ -19,11 +19,11 @@ public sealed class ListModulesCommand : Command {
             "Simulates Linux kernel boot messages with hardware detection and service startup"
         );
 
-        // Placeholder for future modules
+        // Cargo module
         table.AddRow(
-            "[dim]cargo[/]",
-            "[dim]build[/]",
-            "[dim]Simulates Rust cargo build with dependencies (coming soon)[/]"
+            "[green]cargo[/]",
+            "build",
+            "Simulates Rust cargo build with dependency resolution, compilation, and testing"
         );
 
         table.AddRow(
