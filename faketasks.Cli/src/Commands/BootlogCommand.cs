@@ -1,12 +1,11 @@
 using System.ComponentModel;
-using Spectre.Console.Cli;
 using faketasks.Cli.Infrastructure.Settings;
 using faketasks.Core.Configuration;
 using faketasks.Core.Data;
 using faketasks.Core.IO;
 using faketasks.Core.Modules;
 using faketasks.Core.Orchestration;
-
+using Spectre.Console.Cli;
 namespace faketasks.Cli.Commands;
 
 [Description( "Simulate Linux kernel boot messages" )]
@@ -19,7 +18,7 @@ public sealed class BootlogCommand : AsyncCommand<BootlogSettings> {
             ExitAfterModules = settings.ModuleCount ?? (settings.TestMode ? 1 : null),
             ExitAfterTime = settings.TimeLimit.HasValue
                 ? TimeSpan.FromSeconds( settings.TimeLimit.Value )
-                : null
+                : null,
         };
 
         // Initialize module and scheduler

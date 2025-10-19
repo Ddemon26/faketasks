@@ -1,7 +1,6 @@
 using System.ComponentModel;
 using Spectre.Console;
 using Spectre.Console.Cli;
-
 namespace faketasks.Cli.Commands;
 
 [Description( "List all available modules" )]

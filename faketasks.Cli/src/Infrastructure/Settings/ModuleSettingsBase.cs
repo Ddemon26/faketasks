@@ -1,11 +1,10 @@
 using System.ComponentModel;
 using Spectre.Console.Cli;
-
 namespace faketasks.Cli.Infrastructure.Settings;
 
 /// <summary>
-/// Base settings for all module commands.
-/// Provides common options like test mode, speed factor, etc.
+///     Base settings for all module commands.
+///     Provides common options like test mode, speed factor, etc.
 /// </summary>
 public class ModuleSettingsBase : CommandSettings {
     [CommandOption( "-t|--test" )]

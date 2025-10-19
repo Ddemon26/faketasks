@@ -1,16 +1,14 @@
 namespace faketasks.Core.Helpers;
 
 /// <summary>
-/// Utilities for formatting timestamps and durations in various styles.
+///     Utilities for formatting timestamps and durations in various styles.
 /// </summary>
-public static class TimestampHelper
-{
+public static class TimestampHelper {
     /// <summary>
-    /// Formats a time as a Linux kernel boot timestamp.
-    /// Format: "[    0.123456] " with 4-digit seconds and 6-digit microseconds.
+    ///     Formats a time as a Linux kernel boot timestamp.
+    ///     Format: "[    0.123456] " with 4-digit seconds and 6-digit microseconds.
     /// </summary>
-    public static string FormatBootTime(double seconds)
-    {
+    public static string FormatBootTime(double seconds) {
         var wholePart = (int)seconds;
         var fractionalPart = (int)((seconds - wholePart) * 1_000_000);
 
@@ -18,48 +16,40 @@ public static class TimestampHelper
     }
 
     /// <summary>
-    /// Formats a TimeSpan as a kernel boot timestamp.
+    ///     Formats a TimeSpan as a kernel boot timestamp.
     /// </summary>
     public static string FormatBootTime(TimeSpan elapsed)
-    {
-        return FormatBootTime(elapsed.TotalSeconds);
-    }
+        => FormatBootTime( elapsed.TotalSeconds );
 
     /// <summary>
-    /// Formats a timestamp in ISO 8601 format with UTC timezone.
-    /// Example: "2025-01-15T14:30:45Z"
+    ///     Formats a timestamp in ISO 8601 format with UTC timezone.
+    ///     Example: "2025-01-15T14:30:45Z"
     /// </summary>
     public static string FormatISO8601(DateTime dateTime)
-    {
-        return dateTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
-    }
+        => dateTime.ToUniversalTime().ToString( "yyyy-MM-ddTHH:mm:ssZ" );
 
     /// <summary>
-    /// Formats a timestamp in ISO 8601 format for the current time.
+    ///     Formats a timestamp in ISO 8601 format for the current time.
     /// </summary>
-    public static string FormatISO8601() => FormatISO8601(DateTime.UtcNow);
+    public static string FormatISO8601() => FormatISO8601( DateTime.UtcNow );
 
     /// <summary>
-    /// Formats a relative time (e.g., "2s ago", "5m 30s ago").
+    ///     Formats a relative time (e.g., "2s ago", "5m 30s ago").
     /// </summary>
-    public static string FormatRelativeTime(TimeSpan elapsed)
-    {
-        if (elapsed.TotalSeconds < 60)
-        {
+    public static string FormatRelativeTime(TimeSpan elapsed) {
+        if ( elapsed.TotalSeconds < 60 ) {
             return $"{(int)elapsed.TotalSeconds}s ago";
         }
 
-        if (elapsed.TotalMinutes < 60)
-        {
+        if ( elapsed.TotalMinutes < 60 ) {
             var minutes = (int)elapsed.TotalMinutes;
-            var seconds = elapsed.Seconds;
+            int seconds = elapsed.Seconds;
             return seconds > 0 ? $"{minutes}m {seconds}s ago" : $"{minutes}m ago";
         }
 
-        if (elapsed.TotalHours < 24)
-        {
+        if ( elapsed.TotalHours < 24 ) {
             var hours = (int)elapsed.TotalHours;
-            var minutes = elapsed.Minutes;
+            int minutes = elapsed.Minutes;
             return minutes > 0 ? $"{hours}h {minutes}m ago" : $"{hours}h ago";
         }
 
@@ -68,76 +58,63 @@ public static class TimestampHelper
     }
 
     /// <summary>
-    /// Formats a duration in a compact form (e.g., "1m 23.5s", "45.2s").
+    ///     Formats a duration in a compact form (e.g., "1m 23.5s", "45.2s").
     /// </summary>
-    public static string FormatDuration(TimeSpan duration)
-    {
-        if (duration.TotalSeconds < 1)
-        {
+    public static string FormatDuration(TimeSpan duration) {
+        if ( duration.TotalSeconds < 1 ) {
             return $"{duration.TotalMilliseconds:0}ms";
         }
 
-        if (duration.TotalSeconds < 60)
-        {
+        if ( duration.TotalSeconds < 60 ) {
             return $"{duration.TotalSeconds:0.0}s";
         }
 
-        if (duration.TotalMinutes < 60)
-        {
+        if ( duration.TotalMinutes < 60 ) {
             var minutes = (int)duration.TotalMinutes;
-            var seconds = duration.Seconds + (duration.Milliseconds / 1000.0);
+            double seconds = duration.Seconds + duration.Milliseconds / 1000.0;
             return $"{minutes}m {seconds:0.0}s";
         }
 
         var hours = (int)duration.TotalHours;
-        var mins = duration.Minutes;
+        int mins = duration.Minutes;
         return $"{hours}h {mins}m";
     }
 
     /// <summary>
-    /// Formats a duration in milliseconds.
+    ///     Formats a duration in milliseconds.
     /// </summary>
     public static string FormatDurationMs(TimeSpan duration)
-    {
-        return $"{duration.TotalMilliseconds:0.0}ms";
-    }
+        => $"{duration.TotalMilliseconds:0.0}ms";
 
     /// <summary>
-    /// Formats a timestamp in syslog format.
-    /// Example: "Jan 15 14:30:45"
+    ///     Formats a timestamp in syslog format.
+    ///     Example: "Jan 15 14:30:45"
     /// </summary>
     public static string FormatSyslog(DateTime dateTime)
-    {
-        return dateTime.ToString("MMM dd HH:mm:ss");
-    }
+        => dateTime.ToString( "MMM dd HH:mm:ss" );
 
     /// <summary>
-    /// Formats current time in syslog format.
+    ///     Formats current time in syslog format.
     /// </summary>
-    public static string FormatSyslog() => FormatSyslog(DateTime.Now);
+    public static string FormatSyslog() => FormatSyslog( DateTime.Now );
 
     /// <summary>
-    /// Formats a timestamp for Docker logs.
-    /// Example: "2025-01-15T14:30:45.123456789Z"
+    ///     Formats a timestamp for Docker logs.
+    ///     Example: "2025-01-15T14:30:45.123456789Z"
     /// </summary>
     public static string FormatDockerLog(DateTime dateTime)
-    {
-        return dateTime.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ss.fffffff") + "Z";
-    }
+        => dateTime.ToUniversalTime().ToString( "yyyy-MM-ddTHH:mm:ss.fffffff" ) + "Z";
 
     /// <summary>
-    /// Formats a precise duration with microseconds (e.g., "0.000123s").
-    /// Used for compilation times and performance metrics.
+    ///     Formats a precise duration with microseconds (e.g., "0.000123s").
+    ///     Used for compilation times and performance metrics.
     /// </summary>
-    public static string FormatPreciseDuration(TimeSpan duration)
-    {
-        if (duration.TotalSeconds < 0.001)
-        {
+    public static string FormatPreciseDuration(TimeSpan duration) {
+        if ( duration.TotalSeconds < 0.001 ) {
             return $"{duration.TotalMilliseconds * 1000:0.0}µs";
         }
 
-        if (duration.TotalSeconds < 1)
-        {
+        if ( duration.TotalSeconds < 1 ) {
             return $"{duration.TotalMilliseconds:0.00}ms";
         }
 
@@ -145,18 +122,15 @@ public static class TimestampHelper
     }
 
     /// <summary>
-    /// Formats a build/compile time in Cargo style.
-    /// Examples: "Finished", "in 2.34s"
+    ///     Formats a build/compile time in Cargo style.
+    ///     Examples: "Finished", "in 2.34s"
     /// </summary>
-    public static string FormatCargoTime(TimeSpan duration)
-    {
-        if (duration.TotalSeconds < 1)
-        {
+    public static string FormatCargoTime(TimeSpan duration) {
+        if ( duration.TotalSeconds < 1 ) {
             return $"{duration.TotalMilliseconds:0.00}s";
         }
 
-        if (duration.TotalMinutes < 1)
-        {
+        if ( duration.TotalMinutes < 1 ) {
             return $"{duration.TotalSeconds:0.00}s";
         }
 
@@ -164,27 +138,23 @@ public static class TimestampHelper
     }
 
     /// <summary>
-    /// Formats an uptime duration (e.g., "2 days, 3 hours, 15 minutes").
+    ///     Formats an uptime duration (e.g., "2 days, 3 hours, 15 minutes").
     /// </summary>
-    public static string FormatUptime(TimeSpan uptime)
-    {
-        var parts = new List<string>();
+    public static string FormatUptime(TimeSpan uptime) {
+        List<string> parts = new();
 
-        if (uptime.Days > 0)
-        {
-            parts.Add($"{uptime.Days} day{(uptime.Days == 1 ? "" : "s")}");
+        if ( uptime.Days > 0 ) {
+            parts.Add( $"{uptime.Days} day{(uptime.Days == 1 ? "" : "s")}" );
         }
 
-        if (uptime.Hours > 0)
-        {
-            parts.Add($"{uptime.Hours} hour{(uptime.Hours == 1 ? "" : "s")}");
+        if ( uptime.Hours > 0 ) {
+            parts.Add( $"{uptime.Hours} hour{(uptime.Hours == 1 ? "" : "s")}" );
         }
 
-        if (uptime.Minutes > 0 || parts.Count == 0)
-        {
-            parts.Add($"{uptime.Minutes} minute{(uptime.Minutes == 1 ? "" : "s")}");
+        if ( uptime.Minutes > 0 || parts.Count == 0 ) {
+            parts.Add( $"{uptime.Minutes} minute{(uptime.Minutes == 1 ? "" : "s")}" );
         }
 
-        return string.Join(", ", parts);
+        return string.Join( ", ", parts );
     }
 }

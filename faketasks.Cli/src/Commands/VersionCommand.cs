@@ -2,15 +2,14 @@ using System.ComponentModel;
 using System.Reflection;
 using Spectre.Console;
 using Spectre.Console.Cli;
-
 namespace faketasks.Cli.Commands;
 
 [Description( "Display version information" )]
 public sealed class VersionCommand : Command {
     public override int Execute(CommandContext context) {
         var assembly = Assembly.GetExecutingAssembly();
-        var version = assembly.GetName().Version?.ToString() ?? "1.0.0";
-        var informationalVersion = assembly
+        string version = assembly.GetName().Version?.ToString() ?? "1.0.0";
+        string informationalVersion = assembly
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion ?? version;
 
