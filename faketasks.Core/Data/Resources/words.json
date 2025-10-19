@@ -1,0 +1,24 @@
+{
+  "adjectives": [
+    "async", "fast", "secure", "portable", "modern", "blazing", "safe", "efficient",
+    "robust", "scalable", "concurrent", "parallel", "distributed", "reactive", "functional",
+    "generic", "static", "dynamic", "lightweight", "optimized", "cross-platform", "native",
+    "zero-cost", "type-safe", "thread-safe", "memory-safe", "lock-free", "non-blocking",
+    "high-performance", "production-ready", "battle-tested", "minimal", "composable"
+  ],
+  "nouns": [
+    "parser", "runtime", "compiler", "framework", "library", "toolkit", "engine", "driver",
+    "handler", "processor", "executor", "scheduler", "allocator", "collector", "analyzer",
+    "transformer", "validator", "serializer", "deserializer", "encoder", "decoder", "formatter",
+    "adapter", "wrapper", "bridge", "client", "server", "router", "dispatcher", "manager",
+    "builder", "factory", "registry", "container", "pool", "cache", "store", "repository",
+    "service", "worker", "task", "stream", "channel", "buffer", "queue", "stack", "heap"
+  ],
+  "verbs": [
+    "compile", "build", "test", "deploy", "run", "execute", "process", "parse", "analyze",
+    "transform", "validate", "serialize", "deserialize", "encode", "decode", "format",
+    "initialize", "configure", "setup", "install", "update", "upgrade", "migrate", "sync",
+    "load", "save", "read", "write", "fetch", "send", "receive", "handle", "manage",
+    "create", "destroy", "start", "stop", "pause", "resume", "cancel", "retry", "recover"
+  ]
+}
