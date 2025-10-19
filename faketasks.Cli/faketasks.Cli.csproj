@@ -13,6 +13,23 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+
+        <!-- Version Information -->
+        <Version>1.0.0</Version>
+        <AssemblyVersion>1.0.0.0</AssemblyVersion>
+        <FileVersion>1.0.0.0</FileVersion>
+
+        <!-- Product Information -->
+        <Product>faketasks</Product>
+        <Description>A nonsense activity generator inspired by genact</Description>
+        <Company>faketasks</Company>
+        <Authors>faketasks contributors</Authors>
+        <Copyright>Copyright © 2025 faketasks contributors</Copyright>
+
+        <!-- Repository Information -->
+        <RepositoryUrl>https://github.com/yourusername/faketasks</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <PackageTags>cli;terminal;simulator;fake;genact</PackageTags>
     </PropertyGroup>
 
 </Project>

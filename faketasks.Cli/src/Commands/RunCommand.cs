@@ -5,9 +5,9 @@ using faketasks.Core.Configuration;
 using Spectre.Console.Cli;
 namespace faketasks.Cli.Commands;
 
-[Description( "Simulate Linux kernel boot messages" )]
-public sealed class BootlogCommand : AsyncCommand<BootlogSettings> {
-    public override async Task<int> ExecuteAsync(CommandContext context, BootlogSettings settings) {
+[Description( "Run fake activity modules" )]
+public sealed class RunCommand : AsyncCommand<RunSettings> {
+    public override async Task<int> ExecuteAsync(CommandContext context, RunSettings settings) {
         // Create configuration from settings
         var config = new GeneratorConfig {
             SpeedFactor = settings.SpeedFactor,
@@ -18,8 +18,11 @@ public sealed class BootlogCommand : AsyncCommand<BootlogSettings> {
                 : null,
         };
 
-        // Create scheduler for bootlog module only
-        (var scheduler, var cts) = SchedulerFactory.CreateScheduler( config, new[] { "bootlog" } );
+        // Get enabled modules from settings (null = all modules)
+        IReadOnlyList<string>? enabledModules = settings.GetEnabledModules();
+
+        // Create scheduler using factory
+        (var scheduler, var cts) = SchedulerFactory.CreateScheduler( config, enabledModules );
 
         // Run scheduler with standard error handling
         return await SchedulerFactory.RunSchedulerAsync( scheduler, cts );

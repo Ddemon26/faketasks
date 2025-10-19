@@ -7,6 +7,16 @@ namespace faketasks.Core.IO;
 public sealed class ConsoleOutputWriter : IOutputWriter {
     const int DefaultTerminalWidth = 80;
 
+    /// <summary>
+    ///     Creates an appropriate output writer based on TTY detection.
+    ///     Returns PlainTextOutputWriter if output is redirected, otherwise ConsoleOutputWriter.
+    /// </summary>
+    public static IOutputWriter Create() {
+        // Check if output is redirected (e.g., piped to file or another command)
+        bool isRedirected = Console.IsOutputRedirected || Console.IsErrorRedirected;
+        return isRedirected ? new PlainTextOutputWriter() : new ConsoleOutputWriter();
+    }
+
     public void Write(string text) {
         Console.Write( text );
     }

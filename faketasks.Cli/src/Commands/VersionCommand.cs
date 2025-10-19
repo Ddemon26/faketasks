@@ -13,8 +13,22 @@ public sealed class VersionCommand : Command {
             .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
             .InformationalVersion ?? version;
 
+        string? product = assembly.GetCustomAttribute<AssemblyProductAttribute>()?.Product;
+        string? description = assembly.GetCustomAttribute<AssemblyDescriptionAttribute>()?.Description;
+        string? copyright = assembly.GetCustomAttribute<AssemblyCopyrightAttribute>()?.Copyright;
+
+        // Get repository URL from assembly metadata
+        string? repositoryUrl = null;
+        var metadataAttributes = assembly.GetCustomAttributes<AssemblyMetadataAttribute>();
+        foreach (var attr in metadataAttributes) {
+            if ( attr.Key == "RepositoryUrl" ) {
+                repositoryUrl = attr.Value;
+                break;
+            }
+        }
+
         // Display banner
-        var rule = new Rule( "[cyan]faketasks[/]" );
+        var rule = new Rule( $"[cyan]{product ?? "faketasks"}[/]" );
         rule.LeftJustified();
         AnsiConsole.Write( rule );
 
@@ -24,8 +38,15 @@ public sealed class VersionCommand : Command {
         AnsiConsole.MarkupLine( $"  Platform: [dim]{Environment.OSVersion.Platform}[/]" );
 
         Console.WriteLine();
-        AnsiConsole.MarkupLine( "[dim]A nonsense activity generator inspired by genact[/]" );
-        AnsiConsole.MarkupLine( "[dim]Repository: https://github.com/yourusername/faketasks[/]" );
+        if ( !string.IsNullOrEmpty( description ) ) {
+            AnsiConsole.MarkupLine( $"[dim]{description}[/]" );
+        }
+        if ( !string.IsNullOrEmpty( repositoryUrl ) ) {
+            AnsiConsole.MarkupLine( $"[dim]Repository: {repositoryUrl}[/]" );
+        }
+        if ( !string.IsNullOrEmpty( copyright ) ) {
+            AnsiConsole.MarkupLine( $"[dim]{copyright}[/]" );
+        }
 
         Console.WriteLine();
 

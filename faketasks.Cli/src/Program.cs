@@ -1,3 +1,4 @@
+using System.Reflection;
 using faketasks.Cli.Commands;
 using faketasks.Cli.Infrastructure;
 using Spectre.Console;
@@ -16,10 +17,20 @@ var app = new CommandApp();
 app.Configure( config => {
         config.SetApplicationName( "faketasks" );
 
-        // Custom help text
-        config.SetApplicationVersion( "1.0.0" );
+        // Get version from assembly metadata
+        var assembly = Assembly.GetExecutingAssembly();
+        string version = assembly.GetName().Version?.ToString() ?? "1.0.0";
+        config.SetApplicationVersion( version );
 
-        // Module commands
+        // General run command (can run any modules)
+        config.AddCommand<RunCommand>( "run" )
+            .WithDescription( "Run fake activity modules" )
+            .WithExample( "run" )
+            .WithExample( "run", "--modules", "bootlog" )
+            .WithExample( "run", "--modules", "bootlog,cargo", "--speed", "2.0" )
+            .WithExample( "run", "-t" );
+
+        // Specific module commands
         config.AddCommand<BootlogCommand>( "bootlog" )
             .WithAlias( "boot" )
             .WithDescription( "Simulate Linux kernel boot messages" )
