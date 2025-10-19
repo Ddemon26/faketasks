@@ -1,17 +1,16 @@
 namespace faketasks.Core.Data;
 
 /// <summary>
-/// Provides access to data resources (word lists, file names, etc.) used by modules.
-/// Implementations can load from embedded resources, files, or other sources.
+///     Provides access to data resources (word lists, file names, etc.) used by modules.
+///     Implementations can load from embedded resources, files, or other sources.
 /// </summary>
-public interface IDataProvider
-{
+public interface IDataProvider {
     /// <summary>
-    /// Asynchronously loads lines from a named data resource.
+    ///     Asynchronously loads lines from a named data resource.
     /// </summary>
     /// <param name="resourceName">
-    /// Identifier for the resource (e.g., "package_names", "log_messages").
-    /// Resource naming convention is implementation-specific.
+    ///     Identifier for the resource (e.g., "package_names", "log_messages").
+    ///     Resource naming convention is implementation-specific.
     /// </param>
     /// <returns>Read-only list of lines from the resource.</returns>
     /// <exception cref="ArgumentException">If the resource name is invalid.</exception>

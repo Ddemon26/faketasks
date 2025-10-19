@@ -1,54 +1,42 @@
 namespace faketasks.Core.IO;
 
 /// <summary>
-/// Standard console output writer using System.Console.
-/// Supports ANSI color codes and terminal width detection.
+///     Standard console output writer using System.Console.
+///     Supports ANSI color codes and terminal width detection.
 /// </summary>
-public sealed class ConsoleOutputWriter : IOutputWriter
-{
-    private const int DefaultTerminalWidth = 80;
+public sealed class ConsoleOutputWriter : IOutputWriter {
+    const int DefaultTerminalWidth = 80;
 
-    public void Write(string text)
-    {
-        Console.Write(text);
+    public void Write(string text) {
+        Console.Write( text );
     }
 
-    public void WriteLine(string text)
-    {
-        Console.WriteLine(text);
+    public void WriteLine(string text) {
+        Console.WriteLine( text );
     }
 
-    public void WriteStyled(string text, ConsoleColor? color = null)
-    {
-        if (color.HasValue)
-        {
+    public void WriteStyled(string text, ConsoleColor? color = null) {
+        if ( color.HasValue ) {
             var previousColor = Console.ForegroundColor;
-            try
-            {
+            try {
                 Console.ForegroundColor = color.Value;
-                Console.Write(text);
+                Console.Write( text );
             }
-            finally
-            {
+            finally {
                 Console.ForegroundColor = previousColor;
             }
         }
-        else
-        {
-            Console.Write(text);
+        else {
+            Console.Write( text );
         }
     }
 
-    public int TerminalWidth
-    {
-        get
-        {
-            try
-            {
+    public int TerminalWidth {
+        get {
+            try {
                 return Console.WindowWidth;
             }
-            catch
-            {
+            catch {
                 // If we can't detect width (e.g., output redirected), use default
                 return DefaultTerminalWidth;
             }
