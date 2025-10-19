@@ -1,3 +1,4 @@
+using System.Text.Json;
 using faketasks.Core.Data;
 using faketasks.Core.Data.Models;
 using faketasks.Core.Helpers;
@@ -7,12 +8,17 @@ namespace faketasks.Core.Modules;
 ///     Simulates Rust cargo build operations with dependency resolution, compilation, and testing.
 /// </summary>
 public sealed class CargoModule : IFakeModule {
-    readonly ITypedDataProvider _dataProvider;
+    readonly IDataProvider _dataProvider;
     PackageData? _packageData;
     WordsData? _wordsData;
+    readonly JsonSerializerOptions _jsonOptions;
 
-    public CargoModule(ITypedDataProvider dataProvider) {
+    public CargoModule(IDataProvider dataProvider) {
         _dataProvider = dataProvider ?? throw new ArgumentNullException( nameof(dataProvider) );
+        _jsonOptions = new JsonSerializerOptions {
+            PropertyNameCaseInsensitive = true,
+            ReadCommentHandling = JsonCommentHandling.Skip,
+        };
     }
 
     public string Name => "cargo";
@@ -20,8 +26,8 @@ public sealed class CargoModule : IFakeModule {
 
     public async Task RunAsync(IModuleContext context, CancellationToken cancellationToken) {
         // Load data if not cached
-        _packageData ??= await _dataProvider.GetPackageDataAsync().ConfigureAwait( false );
-        _wordsData ??= await _dataProvider.GetWordsDataAsync().ConfigureAwait( false );
+        _packageData ??= await LoadJsonDataAsync<PackageData>( "packages" ).ConfigureAwait( false );
+        _wordsData ??= await LoadJsonDataAsync<WordsData>( "words" ).ConfigureAwait( false );
 
         // Generate cargo build sequence
         await EmitCargoUpdate( context, cancellationToken ).ConfigureAwait( false );
@@ -183,5 +189,14 @@ public sealed class CargoModule : IFakeModule {
         context.WriteLine( $"       Size: {binarySize} KB" );
 
         await context.DelayAsync( TimeSpan.FromMilliseconds( 500 ), ct ).ConfigureAwait( false );
+    }
+
+    /// <summary>
+    ///     Loads JSON data from the data provider.
+    /// </summary>
+    async Task<T> LoadJsonDataAsync<T>(string resourceName) where T : class, new() {
+        var lines = await _dataProvider.GetLinesAsync( resourceName ).ConfigureAwait( false );
+        var json = string.Join( Environment.NewLine, lines );
+        return JsonSerializer.Deserialize<T>( json, _jsonOptions ) ?? new T();
     }
 }

@@ -1,13 +1,12 @@
 using System.Reflection;
 using System.Text.Json;
-using faketasks.Core.Data.Models;
 namespace faketasks.Core.Data;
 
 /// <summary>
 ///     Data provider that loads JSON resources embedded in the assembly.
-///     Supports caching and provides strongly-typed access to data models.
+///     Supports caching and provides generic access to data resources.
 /// </summary>
-public sealed class EmbeddedDataProvider : ITypedDataProvider {
+public sealed class EmbeddedDataProvider : IDataProvider {
     readonly Assembly _assembly;
     readonly Dictionary<string, object> _cache;
     readonly JsonSerializerOptions _jsonOptions;
@@ -26,8 +25,9 @@ public sealed class EmbeddedDataProvider : ITypedDataProvider {
     /// <summary>
     ///     Loads lines from a named resource.
     ///     For JSON resources, this returns a flattened array from the specified property.
+    ///     If no property specified, returns the entire file content as single lines.
     /// </summary>
-    /// <param name="resourceName">Format: "filename.propertyPath" (e.g., "words.adjectives")</param>
+    /// <param name="resourceName">Format: "filename.propertyPath" (e.g., "words.adjectives") or just "filename" for entire file</param>
     public async Task<IReadOnlyList<string>> GetLinesAsync(string resourceName) {
         if ( string.IsNullOrWhiteSpace( resourceName ) ) {
             throw new ArgumentException( "Resource name cannot be null or empty.", nameof(resourceName) );
@@ -38,21 +38,22 @@ public sealed class EmbeddedDataProvider : ITypedDataProvider {
             return (IReadOnlyList<string>)cached;
         }
 
-        // Parse resource name (format: "filename.propertyPath")
+        // Parse resource name (format: "filename.propertyPath" or just "filename")
         string[] parts = resourceName.Split( '.', 2 );
-        if ( parts.Length != 2 ) {
-            throw new ArgumentException(
-                $"Invalid resource name format. Expected 'filename.property', got '{resourceName}'",
-                nameof(resourceName)
-            );
-        }
-
         string filename = parts[0];
-        string property = parts[1];
 
         // Load and parse JSON
         var resourcePath = $"faketasks.Core.Data.Resources.{filename}.json";
-        IReadOnlyList<string> lines = await LoadPropertyFromJsonAsync( resourcePath, property ).ConfigureAwait( false );
+        IReadOnlyList<string> lines;
+
+        if ( parts.Length == 2 ) {
+            // With property: "words.adjectives" -> return array from that property
+            string property = parts[1];
+            lines = await LoadPropertyFromJsonAsync( resourcePath, property ).ConfigureAwait( false );
+        } else {
+            // Without property: "linux" -> return entire file as lines
+            lines = await LoadFileAsLinesAsync( resourcePath ).ConfigureAwait( false );
+        }
 
         // Cache if enabled
         if ( _options.EnableCaching ) {
@@ -62,30 +63,7 @@ public sealed class EmbeddedDataProvider : ITypedDataProvider {
         return lines;
     }
 
-    /// <summary>
-    ///     Loads the WordsData model from embedded resources.
-    /// </summary>
-    public async Task<WordsData> GetWordsDataAsync()
-        => await LoadJsonResourceAsync<WordsData>( "words" ).ConfigureAwait( false );
-
-    /// <summary>
-    ///     Loads the LinuxData model from embedded resources.
-    /// </summary>
-    public async Task<LinuxData> GetLinuxDataAsync()
-        => await LoadJsonResourceAsync<LinuxData>( "linux" ).ConfigureAwait( false );
-
-    /// <summary>
-    ///     Loads the PackageData model from embedded resources.
-    /// </summary>
-    public async Task<PackageData> GetPackageDataAsync()
-        => await LoadJsonResourceAsync<PackageData>( "packages" ).ConfigureAwait( false );
-
-    /// <summary>
-    ///     Loads the InfrastructureData model from embedded resources.
-    /// </summary>
-    public async Task<InfrastructureData> GetInfrastructureDataAsync()
-        => await LoadJsonResourceAsync<InfrastructureData>( "infrastructure" ).ConfigureAwait( false );
-
+  
     /// <summary>
     ///     Loads a typed model from an embedded JSON resource.
     /// </summary>
@@ -114,6 +92,26 @@ public sealed class EmbeddedDataProvider : ITypedDataProvider {
         }
 
         return model;
+    }
+
+    /// <summary>
+    ///     Loads an entire file as lines of text.
+    /// </summary>
+    async Task<IReadOnlyList<string>> LoadFileAsLinesAsync(string resourcePath) {
+        using var stream = _assembly.GetManifestResourceStream( resourcePath );
+
+        if ( stream == null ) {
+            throw new InvalidOperationException( $"Resource '{resourcePath}' not found in assembly." );
+        }
+
+        using var reader = new StreamReader( stream );
+        var lines = new List<string>();
+
+        while ( await reader.ReadLineAsync().ConfigureAwait( false ) is { } line ) {
+            lines.Add( line );
+        }
+
+        return lines.AsReadOnly();
     }
 
     /// <summary>

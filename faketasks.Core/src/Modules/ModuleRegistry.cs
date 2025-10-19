@@ -11,7 +11,7 @@ public static class ModuleRegistry {
     /// </summary>
     /// <param name="dataProvider">Data provider to inject into modules.</param>
     /// <returns>List of all registered modules.</returns>
-    public static List<IFakeModule> GetAllModules(ITypedDataProvider dataProvider) {
+    public static List<IFakeModule> GetAllModules(IDataProvider dataProvider) {
         ArgumentNullException.ThrowIfNull( dataProvider );
 
         return new List<IFakeModule> {
@@ -29,7 +29,7 @@ public static class ModuleRegistry {
     /// <param name="name">Module name (case-insensitive).</param>
     /// <param name="dataProvider">Data provider to inject into the module.</param>
     /// <returns>The requested module, or null if not found.</returns>
-    public static IFakeModule? GetModuleByName(string name, ITypedDataProvider dataProvider) {
+    public static IFakeModule? GetModuleByName(string name, IDataProvider dataProvider) {
         ArgumentNullException.ThrowIfNull( name );
         ArgumentNullException.ThrowIfNull( dataProvider );
 

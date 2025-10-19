@@ -1,3 +1,4 @@
+using System.Text.Json;
 using faketasks.Core.Data;
 using faketasks.Core.Data.Models;
 using faketasks.Core.Helpers;
@@ -7,12 +8,17 @@ namespace faketasks.Core.Modules;
 ///     Simulates Linux kernel boot messages with realistic timestamps and hardware detection.
 /// </summary>
 public sealed class BootlogModule : IFakeModule {
-    readonly ITypedDataProvider _dataProvider;
+    readonly IDataProvider _dataProvider;
     LinuxData? _linuxData;
     WordsData? _wordsData;
+    readonly JsonSerializerOptions _jsonOptions;
 
-    public BootlogModule(ITypedDataProvider dataProvider) {
+    public BootlogModule(IDataProvider dataProvider) {
         _dataProvider = dataProvider ?? throw new ArgumentNullException( nameof(dataProvider) );
+        _jsonOptions = new JsonSerializerOptions {
+            PropertyNameCaseInsensitive = true,
+            ReadCommentHandling = JsonCommentHandling.Skip,
+        };
     }
 
     public string Name => "bootlog";
@@ -20,8 +26,8 @@ public sealed class BootlogModule : IFakeModule {
 
     public async Task RunAsync(IModuleContext context, CancellationToken cancellationToken) {
         // Load data if not cached
-        _linuxData ??= await _dataProvider.GetLinuxDataAsync().ConfigureAwait( false );
-        _wordsData ??= await _dataProvider.GetWordsDataAsync().ConfigureAwait( false );
+        _linuxData ??= await LoadJsonDataAsync<LinuxData>( "linux" ).ConfigureAwait( false );
+        _wordsData ??= await LoadJsonDataAsync<WordsData>( "words" ).ConfigureAwait( false );
 
         var bootTime = 0.0;
 
@@ -198,5 +204,14 @@ public sealed class BootlogModule : IFakeModule {
 
         string message = context.Random.NextElement( _linuxData!.KernelMessages );
         return $"{device}: {message}";
+    }
+
+    /// <summary>
+    ///     Loads JSON data from the data provider.
+    /// </summary>
+    async Task<T> LoadJsonDataAsync<T>(string resourceName) where T : class, new() {
+        var lines = await _dataProvider.GetLinesAsync( resourceName ).ConfigureAwait( false );
+        var json = string.Join( Environment.NewLine, lines );
+        return JsonSerializer.Deserialize<T>( json, _jsonOptions ) ?? new T();
     }
 }
